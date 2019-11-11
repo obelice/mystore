@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.his.mapper.SettlecategoryMapper">
+  <resultMap id="BaseResultMap" type="Settlecategory">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="SettleCode" jdbcType="VARCHAR" property="settlecode" />
+    <result column="SettleName" jdbcType="VARCHAR" property="settlename" />
+    <result column="SequenceNo" jdbcType="INTEGER" property="sequenceno" />
+    <result column="DelMark" jdbcType="INTEGER" property="delmark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, SettleCode, SettleName, SequenceNo, DelMark
+  </sql>
+  <!-- 条件 -->
+  <sql id="conditions">
+  	<where>
+  		<if test="sequenceno != null and sequenceno!=''">
+          SequenceNo=#{sequenceno,jdbcType=VARCHAR}
+      </if>
+      <trim prefix="and (" suffix=")" prefixOverrides="or">
+      <if test="settlecode != null and settlecode!=''">
+         or SettleCode=#{settlecode,jdbcType=VARCHAR}
+      </if>
+      <if test="settlename != null and settlename!=''">
+         or SettleName=#{settlename,jdbcType=VARCHAR}
+      </if>
+      </trim>
+  	 </where>
+  </sql>
+  <!-- 待条件查询总行数 -->
+  <select id="selectByCount" parameterType="settlecategory" resultType="int">
+    select 
+    count(1)
+    from settlecategory
+    <include refid="conditions"></include>
+  </select>
+  <!-- 批量删除 -->
+  <delete id="deleteBybatch" parameterType="settlecategory">
+  		delete from settlecategory where id in
+  	<foreach collection="list" item="settlecategory" open="(" close=")" separator=",">
+  		#{settlecategory.id}
+  	</foreach>
+  </delete>
+  
+  <!-- 带条件 or查询-->
+  <select id="selectAllByConditions" parameterType="settlecategory" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	 from settlecategory
+  	<include refid="conditions"></include>
+  	 order by ID desc
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from settlecategory
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from settlecategory
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="Settlecategory">
+    insert into settlecategory (ID, SettleCode, SettleName, 
+      SequenceNo, DelMark)
+    values (#{id,jdbcType=INTEGER}, #{settlecode,jdbcType=VARCHAR}, #{settlename,jdbcType=VARCHAR}, 
+      #{sequenceno,jdbcType=INTEGER}, #{delmark,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="Settlecategory">
+    insert into settlecategory
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="settlecode != null">
+        SettleCode,
+      </if>
+      <if test="settlename != null">
+        SettleName,
+      </if>
+      <if test="sequenceno != null">
+        SequenceNo,
+      </if>
+      <if test="delmark != null">
+        DelMark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="settlecode != null">
+        #{settlecode,jdbcType=VARCHAR},
+      </if>
+      <if test="settlename != null">
+        #{settlename,jdbcType=VARCHAR},
+      </if>
+      <if test="sequenceno != null">
+        #{sequenceno,jdbcType=INTEGER},
+      </if>
+      <if test="delmark != null">
+        #{delmark,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Settlecategory">
+    update settlecategory
+    <set>
+      <if test="settlecode != null">
+        SettleCode = #{settlecode,jdbcType=VARCHAR},
+      </if>
+      <if test="settlename != null">
+        SettleName = #{settlename,jdbcType=VARCHAR},
+      </if>
+      <if test="sequenceno != null">
+        SequenceNo = #{sequenceno,jdbcType=INTEGER},
+      </if>
+      <if test="delmark != null">
+        DelMark = #{delmark,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Settlecategory">
+    update settlecategory
+    set SettleCode = #{settlecode,jdbcType=VARCHAR},
+      SettleName = #{settlename,jdbcType=VARCHAR},
+      SequenceNo = #{sequenceno,jdbcType=INTEGER},
+      DelMark = #{delmark,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
